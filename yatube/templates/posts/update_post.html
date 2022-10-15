@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+    <title>
+      {% block title %}Редактировать пост{% endblock %}
+    </title>
+  </head>
+  <body>
+    <main>
+      <div class="container py-5">
+        <div class="row justify-content-center">
+          <div class="col-md-8 p-5">
+            <div class="card">
+              <div class="card-header">       
+                Редактировать пост             
+              </div>
+              <div class="card-body">        
+                <form method="post" action="../posts/create_post.html">
+                  <input type="hidden" name="csrfmiddlewaretoken" value="">            
+                  <div class="form-group row my-3 p-3">
+                    <label for="id_text">
+                      Текст поста                  
+                      <span class="required text-danger" >*</span>                  
+                    </label>
+                    <textarea name="text" cols="40" rows="10" class="form-control" required id="id_text">[Фокшаны.] Еще переходъ до Фокшанъ, во время котораго я ѣхалъ съ Монго. Человѣкъ пустой, но съ твердыми, хотя и ложными убѣжденіями. Генерал[у] по этому должно быть случаю, угодно было спрашивать о моемъ здоровьи. Свинья! К[о]вырялъ носъ и ничего не написалъ — вотъ 2 упрека за нын[ѣшній] день. Послѣдній упрекъ становится слишкомъ частъ, хотя походъ и можетъ служить въ немъ отчасти извиненіемъ. Отношенія мои съ товарищами становятся такъ пріятны, что мнѣ жалко бросить штабъ. Здоровье кажется (2) лучше.
+                    </textarea>                
+                    <small id="id_text-help" class="form-text text-muted">
+                      Текст нового поста
+                    </small>                  
+                  </div>            
+                  <div class="form-group row my-3 p-3">
+                    <label for="id_group">
+                      Группа                  
+                    </label>
+                    <select name="group" class="form-control" id="id_group">
+                      <option value="">---------</option>
+                      <option value="1" selected>Группа: Лев Толстой – зеркало русской революции</option>
+                    </select>
+                    <small id="id_group-help" class="form-text text-muted">
+                      Группа, к которой будет относиться пост
+                    </small>
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                      Добавить
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
