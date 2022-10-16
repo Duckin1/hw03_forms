@@ -22,11 +22,11 @@
           <a href="{% url 'posts:group_list' post.group.slug  %}">все записи группы: {{ post.group.title }}</a>
         {% endif %}
         {% if not forloop.last %}<hr>{% endif %}
-      {% endfor %}
       <p>
         {{ post.text|linebreaksbr|truncatechars:500 }}
-        <a href="" class="list-group-item-action">подробная информация </a> 
+        <a href="{% url 'posts:post_detail' post.id %}" class="list-group-item-action">подробная информация </a> 
       </p>
+      {% endfor %}
     </article>           
     <hr>
     {% include 'posts/includes/paginator.html' %}  

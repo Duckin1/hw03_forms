@@ -5,6 +5,7 @@
 </title>
   <div class="container py-5">
     <h1>{% block header %}{{ group.title }}{% endblock %}</h1>
+    <p>{{ group.description }}</p>
     <article>
       {% for post in page_obj %}
         <ul>
