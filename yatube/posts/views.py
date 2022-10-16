@@ -1,11 +1,9 @@
-from cgitb import text
-from re import template
-from django.shortcuts import get_object_or_404, render
-
-from .models import Group, Post, User
-from django.core.paginator import Paginator
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .forms import PostForm
+from .models import Group, Post, User
 
 
 def index(request):
@@ -33,11 +31,13 @@ def group_posts(request, slug):
     return render(request, template, context)
 
 
-@login_required
 def profile(request, username):
     template = 'posts/profile.html'
     author = get_object_or_404(User, username=username)
-    page_obj = author.posts.all()
+    post_list = Post.objects.filter(author=author)
+    paginator = Paginator(post_list, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
         'author': author,
         'page_obj': page_obj,
@@ -45,11 +45,9 @@ def profile(request, username):
     return render(request, template, context)
 
 
-@login_required
 def post_detail(request, post_id):
     template = 'posts/post_detail.html'
     post = get_object_or_404(Post, id=post_id)
-
     context = {
         'post': post,
     }
@@ -57,11 +55,29 @@ def post_detail(request, post_id):
 
 
 @login_required
-def post_create(request, post_id):
+def post_create(request):
     template = 'posts/create_post.html'
-    group = get_object_or_404(Group, slug=slug)
+    form = PostForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.author = request.user
+        obj.save()
+        return redirect("posts:profile", request.user)
     context = {
-        'text': text,
-        'group': group,
-    }
+        'form': form,
+        'is_edit': False}
     return render(request, template, context)
+
+
+@login_required
+def post_edit(request, post_id):
+    template = 'posts/create_post.html'
+    posts = Post.objects.select_related('group')
+    post = get_object_or_404(posts, id=post_id)
+    form = PostForm(request.POST or None, instance=post)
+    if post.author != request.user:
+        return redirect('posts:index')
+    if form.is_valid():
+        form.save()
+        return redirect("posts:post_detail", post.id)
+    return render(request, template, {'form': form, 'is_edit': True})

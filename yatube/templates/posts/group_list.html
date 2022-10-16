@@ -4,6 +4,7 @@
   {% block title %}Здесь будет информация о группах проекта Yatube{% endblock %}
 </title>
   <div class="container py-5">
+    <h1>{% block header %}{{ group.title }}{% endblock %}</h1>
     <article>
       {% for post in page_obj %}
         <ul>
@@ -14,12 +15,12 @@
             Дата публикации: {{ post.pub_date|date:"d E Y" }}
           </li>
         </ul>
-          {% autoescape on %}
-            <p>{{ post.text|linebreaksbr }}</p>
-          {% endautoescape %}
-        {% if not forloop.last %}<hr>{% endif %}
-      {% endfor %}
-      {% include 'posts/includes/paginator.html' %}
-      </article>
-    </div>
+         {% autoescape on %}
+           <p>{{ post.text|linebreaksbr }}</p>
+        {% endautoescape %}
+      {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+    {% include 'posts/includes/paginator.html' %}
+    </article>
+  </div>
 {% endblock %}
