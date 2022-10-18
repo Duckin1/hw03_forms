@@ -1,59 +1,53 @@
 {% extends 'base.html' %}
 {% block title %}
-    Создание поста 
+  {% if is_edit %}
+    <title>Редактирование поста</title>
+  {% else %}
+    <title>Создание поста</title>
+  {% endif %} 
 {% endblock %}
 {% block content %}
   <div class="row justify-content-center">
-      <div class="col-md-8 p-5">
-          {% if form.errors %}
-              {% for field in form %}
-                {% for error in field.errors %}            
-                  <div class="alert alert-danger">
-                    {{ error|escape }}
-                  </div>
-                {% endfor %}
-              {% endfor %}
-              {% for error in form.non_field_errors %}
-                <div class="alert alert-danger">
-                  {{ error|escape }}
-                </div>
-              {% endfor %}
-            {% endif %}
-            <div class="card ">
-              <div class="card-header">       
-                {% if is_edit %}
-                  Редактировать запись
-                {% else %}
-                  Добавить запись
-                {% endif %}    
+    <div class="col-md-8 p-5">
+      {% if form.errors %}
+        {% for field in form %}
+          {% for error in field.errors %}            
+            <div class="alert alert-danger">
+              {{ error|escape }}
             </div>
-            <div class="card-body ">        
-              <form method="post" action="">
-                  {% csrf_token %}      
-                    <div class="form-group row my-3 p-3">
-                      <label for="id_text">
-                          Текст поста                  
-                            <span class="required text-danger" >*</span>                  
-                        </label>
-                      {{ form.text}}
-                    </div>            
-                    <div class="form-group row my-3 p-3">
-                      <label for="id_group">
-                          Группа                  
-                      </label>
-                      {{ form.group }}
-                    </div>
-                    <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-primary">
-                          {% if is_edit %}
-                            Добавить
-                              {% else %}
-                              Сохранить
-                          {% endif %}  
-                      </button>
-                  </div>
-              </form>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <div class="alert alert-danger">
+            {{ error|escape }}
           </div>
+        {% endfor %}
+      {% endif %}
+      <div class="card ">
+        <div class="card-header">       
+          {% if is_edit %}
+            Редактировать пост
+          {% else %}
+            Добавить пост
+          {% endif %}    
+        </div>
+      <div class="card-body ">        
+        <form method="post">
+          {% csrf_token %}
+            <div class="form-group row my-3 p-3">
+              {{ form }}
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary">
+                {% if is_edit %}
+                  Добавить
+                    {% else %}
+                  Сохранить
+                {% endif %}  
+              </button>
+          </div>
+        </form>
       </div>
+    </div>
   </div>
 {% endblock %}

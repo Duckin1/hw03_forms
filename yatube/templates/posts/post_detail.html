@@ -1,40 +1,50 @@
-{% extends "base.html" %}
-{% block title %}Пост {{ post|truncatechars:30 }}{% endblock %}
+{% extends 'base.html' %}
+{% block title %}
+  Пост {{ post.text|truncatechars:30 }}
+{% endblock %}
 {% block content %}
-<div class="row">
+<h1> Информация о Посте № {{ post.pk }}</h1>
   <aside class="col-12 col-md-3">
-    <ul class="list-group list-group-flush">
+    <ul class="list-group ">
       <li class="list-group-item">
-        Дата публикации: {{ post.pub_date|date:'d E Y' }}
+        Дата публикации: {{ post.pub_date|date:"d E Y" }}
       </li>
+      {% if post.group %}
       <li class="list-group-item">
-        Группа:
-        {% if post.group %}
+        Группа: 
+        <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item-action">
           {{ post.group }}
-        {% else %}
-          Нет такой группы
-        {% endif %}
-        {% if post.group %}
-          <a href="{% url 'posts:group_list' post.group.slug %}">Все записи группы</a>
-        {% endif %}
+        </a>
+      </li>
+      {% endif %}
+      <li class="list-group-item">
+        Автор: {{ post.author }}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        Всего постов автора:  <span >{{ post.author.posts.count }}</span> 
       </li>
       <li class="list-group-item">
-        Автор: {% if post.author.get_full_name %}{{ post.author.get_full_name }}{% else %}{{ post.author }}{% endif %}
+        все посты пользователя:
+        <br> 
+        <a href="{% url 'posts:profile' post.author %}" class="list-group-item-action">
+          {{ post.author.get_full_name }}
+        </a>
       </li>
-      <li class="list-group-item">
-        Всего постов автора: {{ posts_count }}
-      </li>
-      <li class="list-group-item">
-        <a href="{% url 'posts:profile' post.author %}">Все посты пользователя</a>
-      </li>
+      {% if user == post.author %}
+        <li class="list-group-item">
+          <a href="{% url 'posts:post_edit' post.id  %}" class="list-group-item-action">
+            Изменить пост 
+          </a>
+        </li> 
+      {% endif %}
     </ul>
-  </aside>
+  </aside>     
+  <hr>
   <article class="col-12 col-md-9">
-    <p>{{ post }}</p>
-    {% if post.author == requser %}
-    <a class="btn btn-primary" href="{% url 'posts:edit' post.id %}">Редактировать запись</a>
-    {% endif %}
-  </article>
-  </div>
-</div>
+    <p>
+      {% autoescape on %}
+        <p>{{ post.text|linebreaksbr }}</p>
+      {% endautoescape %}
+    </p>
+  </article
 {% endblock %}

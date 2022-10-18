@@ -1,16 +1,21 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
+from django.conf import settings
 
 from .forms import PostForm
 from .models import Group, Post, User
 
 
-def index(request):
-    post_list = Post.objects.all().order_by('-pub_date')
-    paginator = Paginator(post_list, 10)
+def paginator(request, post_list):
+    paginator = Paginator(post_list, settings.PAGE_LIMIT)
     page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    return paginator.get_page(page_number)
+
+
+def index(request):
+    post_list = Post.objects.all()
+    page_obj = paginator(request=request, post_list=post_list)
     context = {
         'page_obj': page_obj,
     }
@@ -21,9 +26,7 @@ def group_posts(request, slug):
     template = 'posts/group_list.html'
     group = get_object_or_404(Group, slug=slug)
     post_list = group.posts.all()
-    paginator = Paginator(post_list, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginator(request=request, post_list=post_list)
     context = {
         'group': group,
         'page_obj': page_obj,
@@ -34,10 +37,8 @@ def group_posts(request, slug):
 def profile(request, username):
     template = 'posts/profile.html'
     author = get_object_or_404(User, username=username)
-    post_list = Post.objects.filter(author=author)
-    paginator = Paginator(post_list, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    post_list = author.posts.select_related('group')
+    page_obj = paginator(request=request, post_list=post_list)
     context = {
         'author': author,
         'page_obj': page_obj,
@@ -62,7 +63,7 @@ def post_create(request):
         obj = form.save(commit=False)
         obj.author = request.user
         obj.save()
-        return redirect("posts:profile", request.user)
+        return redirect('posts:profile', request.user)
     context = {
         'form': form,
         'is_edit': False}
@@ -79,5 +80,5 @@ def post_edit(request, post_id):
         return redirect('posts:index')
     if form.is_valid():
         form.save()
-        return redirect("posts:post_detail", post.id)
+        return redirect('posts:post_detail', post.id)
     return render(request, template, {'form': form, 'is_edit': True})

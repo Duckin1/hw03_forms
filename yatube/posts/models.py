@@ -42,7 +42,7 @@ class Post(models.Model):
         Group,
         blank=True,
         null=True,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         related_name='posts',
         verbose_name="Группа"
     )
