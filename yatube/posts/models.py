@@ -52,4 +52,5 @@ class Post(models.Model):
         verbose_name_plural = "Посты"
 
     def __str__(self):
-        return self.text
+        TEXT_LIMIT = 15
+        return self.text[:TEXT_LIMIT]
