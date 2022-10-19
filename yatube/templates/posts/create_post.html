@@ -31,20 +31,30 @@
             Добавить пост
           {% endif %}    
         </div>
-      <div class="card-body ">        
-        <form method="post">
-          {% csrf_token %}
+        <div class="card-body ">        
+          <form method="post" action="">
+            {% csrf_token %}      
             <div class="form-group row my-3 p-3">
-              {{ form }}
-            </div>
-            <div class="d-flex justify-content-end">
-              <button type="submit" class="btn btn-primary">
+              <label for="id_text">
+                Текст поста                  
+                <span class="required text-danger" >*</span>                  
+              </label>
+                {{ form.text}}
+              </div>            
+              <div class="form-group row my-3 p-3">
+                <label for="id_group">
+                  Группа                  
+                </label>
+                  {{ form.group }}
+                </div>
+                <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">
                 {% if is_edit %}
                   Добавить
-                    {% else %}
+                {% else %}
                   Сохранить
-                {% endif %}  
-              </button>
+              {% endif %}  
+            </button>
           </div>
         </form>
       </div>

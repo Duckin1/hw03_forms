@@ -9,7 +9,7 @@
       <li class="list-group-item">
         Дата публикации: {{ post.pub_date|date:"d E Y" }}
       </li>
-      {% if post.group %}
+      {% if post.group.title %}
       <li class="list-group-item">
         Группа: 
         <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item-action">
@@ -18,7 +18,7 @@
       </li>
       {% endif %}
       <li class="list-group-item">
-        Автор: {{ post.author }}
+        Автор: {{ post.author.get_full_name }}
       </li>
       <li class="list-group-item d-flex justify-content-between align-items-center">
         Всего постов автора:  <span >{{ post.author.posts.count }}</span> 
