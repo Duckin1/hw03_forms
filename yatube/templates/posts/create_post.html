@@ -32,35 +32,35 @@
           {% endif %}    
         </div>
         <div class="card-body ">        
-          <form method="post" action="">
-            {% csrf_token %}      
-            <div class="form-group row my-3 p-3">
-              <label for="id_text">
-                Текст поста                  
-                <span class="required text-danger" >*</span>                  
+          <form method="post">
+            {% csrf_token %}
+            {% for field in form %} 
+            <div class="form-group row my-3 p-3"> 
+              <label for="{{ field.id_for_label }}"> 
+                {{ field.label }}
+                  {% if field.field.required %}                  
+                    <span class="required text-danger" >*</span>
+                {% endif %}                   
               </label>
-              <div class="form-group">
-                <label for="exampleFormControlTextarea1"></label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="7"></textarea>
-              </div>
-              </div>            
-              <div class="form-group row my-3 p-3">
-                <label for="id_group">
-                  Группа                  
-                </label>
-                  {{ form.group }}
-                </div>
-                <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">
-                {% if is_edit %}
-                  Добавить
-                {% else %}
-                  Сохранить
-              {% endif %}  
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+              {{ field }}
+              {% if field.help_text %}
+              <small id="{{ field.id_for_label}}-help" class="form-text text-muted">
+                {{ field.help_text|safe }}
+              </small>
+              {% endif %}
+            </div>
+            {% endfor %}
+            <div class="d-flex justify-content-end"> 
+          <button type="submit" class="btn btn-primary"> 
+          {% if is_edit %} 
+            Добавить 
+          {% else %} 
+            Сохранить 
+          {% endif %}   
+        </button> 
+      </div> 
+    </form> 
+  </div> 
+</div> 
+</div> 
 {% endblock %}
