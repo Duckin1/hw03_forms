@@ -13,7 +13,7 @@
       <li class="list-group-item">
         Группа: 
         <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item-action">
-          {{ post.group }}
+          {{ post.group.title }}
         </a>
       </li>
       {% endif %}
