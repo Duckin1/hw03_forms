@@ -1,4 +1,3 @@
-from django import forms
 from django.shortcuts import get_object_or_404
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -30,7 +29,6 @@ class TaskURLTests(TestCase):
             group=cls.group,
         )
 
-    # Проверяем используемые шаблоны
     def test_pages_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
         # Собираем в словарь пары "имя_html_шаблона: reverse(name)"
@@ -60,3 +58,10 @@ class TaskURLTests(TestCase):
             with self.subTest(reverse_name=reverse_name):
                 response = self.authorized_client.get(reverse_name)
                 self.assertTemplateUsed(response, template)
+
+    def test_index_page_show_correct_context(self):
+        """Шаблон index сформирован с правильным контекстом."""
+        response = self.authorized_client.get(reverse('posts:index'))
+        for post in Post.objects.select_related('group'):
+            self.assertEqual(response.context.get('post'), post)
+
