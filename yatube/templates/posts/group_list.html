@@ -3,25 +3,16 @@
 <title>
   {% block title %}Здесь будет информация о группах проекта Yatube{% endblock %}
 </title>
-  <div class="container py-5">
-    <h1>{% block header %}{{ group.title }}{% endblock %}</h1>
-    <p>{{ group.description }}</p>
-    <article>
-      {% for post in page_obj %}
-        <ul>
-          <li>
-            Автор: {{ post.author.get_full_name }}
-          </li>
-          <li>
-            Дата публикации: {{ post.pub_date|date:"d E Y" }}
-          </li>
-        </ul>
-         {% autoescape on %}
-           <p>{{ post.text|linebreaksbr }}</p>
-        {% endautoescape %}
-      {% if not forloop.last %}<hr>{% endif %}
-    {% endfor %}
-    {% include 'posts/includes/paginator.html' %}
-    </article>
-  </div>
+  <h1>{{ group.title }}</h1>
+  <p>
+    {{ group.description }}
+  </p>
+  {% for post in page_obj %}
+    <hr>
+      {% include 'posts/includes/article.html' %}
+    <br>
+    {% empty %}
+      <p>Нет Постов</p>
+  {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
 {% endblock %}
